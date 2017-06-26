@@ -2,6 +2,7 @@ package example.newsclient.ui;
 
 import android.animation.Animator;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -24,7 +25,9 @@ public class GuideActivity extends BaseActivity {
             R.drawable.ad_new_version1_img6,
             R.drawable.ad_new_version1_img7,
     };
+    //图片的下标
     private int index=0;
+
     private Handler mHandler=new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
@@ -34,6 +37,8 @@ public class GuideActivity extends BaseActivity {
         return false;
         }
     });
+    //
+    private MediaPlayer mMediaPlayer;
 
 
     @Override
@@ -112,6 +117,48 @@ public class GuideActivity extends BaseActivity {
                 })
                 .start();
 
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        //播放音频
+        playBackgroundMusic();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        //停止播放音频
+        stopMusic();
+    }
+
+    private void playBackgroundMusic(){
+        try {
+            if(mMediaPlayer==null){
+                mMediaPlayer=MediaPlayer.create(this, R.raw.new_version);
+            }
+            //引入MP3文件
+           // AssetFileDescriptor descriptor=getAssets().openFd("new_version.mp3");
+           // mMediaPlayer.setDataSource(descriptor.getFileDescriptor(),0L,descriptor.getLength());
+            //循环
+            mMediaPlayer.setLooping(true);
+            //左声道右声道
+            mMediaPlayer.setVolume(1.0f,1.0f);
+            //开始播放
+            mMediaPlayer.start();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void stopMusic(){
+        if (mMediaPlayer!=null){
+            mMediaPlayer.stop();
+            mMediaPlayer.release();
+            mMediaPlayer=null;
+        }
     }
 
     @Override
