@@ -3,7 +3,6 @@ package example.newsclient.ui;
 import android.animation.Animator;
 import android.content.Intent;
 import android.media.MediaPlayer;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
@@ -41,13 +40,13 @@ public class GuideActivity extends BaseActivity {
     private MediaPlayer mMediaPlayer;
 
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(getLayoutResId());
-        initView();
-        initHandler();
-    }
+//    @Override
+//    protected void onCreate(Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+//        setContentView(getLayoutResId());
+//       // initView();
+//        initHandler();
+//    }
 
     private void initHandler() {
 
@@ -55,17 +54,18 @@ public class GuideActivity extends BaseActivity {
 
 
     @Override
-    protected void initData() {
+    public void initData() {
 
     }
 
     @Override
-    protected void initListener() {
+    public void initListener() {
 
     }
 
     @Override
-    protected void initView() {
+    public void initView() {
+        initHandler();
         mImageView_start= (ImageView) findViewById(R.id.image_gui);
         mButton_start= (Button) findViewById(R.id.btn_start);
 

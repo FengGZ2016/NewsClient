@@ -1,7 +1,6 @@
 package example.newsclient.ui;
 
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
@@ -13,20 +12,30 @@ import android.support.v7.app.AppCompatActivity;
 
 public abstract class BaseActivity extends AppCompatActivity{
 
+//    @Override
+//    public void onCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
+//        super.onCreate(savedInstanceState, persistentState);
+//        setContentView(getLayoutResId());
+//        initView();
+//        initListener();
+//       initData();
+//    }
+
+
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
-        super.onCreate(savedInstanceState, persistentState);
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         setContentView(getLayoutResId());
         initView();
         initListener();
-       initData();
+        initData();
     }
 
-    protected abstract void initData();
+    public abstract void initData();
 
-    protected abstract void initListener();
+    public abstract void initListener();
 
-    protected abstract void initView();
+    public abstract void initView();
 
     
     /**

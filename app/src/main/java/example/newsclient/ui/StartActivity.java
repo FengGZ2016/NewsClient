@@ -1,33 +1,25 @@
 package example.newsclient.ui;
 
 import android.content.Intent;
-import android.os.Bundle;
 
 import example.newsclient.R;
 
 public class StartActivity extends BaseActivity {
 
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(getLayoutResId());
-        initView();
-    }
-
 
     @Override
-    protected void initData() {
+    public void initData() {
 
     }
 
     @Override
-    protected void initListener() {
+    public void initListener() {
 
     }
 
     @Override
-    protected void initView() {
+    public void initView() {
        new Thread(new Runnable() {
            @Override
            public void run() {
