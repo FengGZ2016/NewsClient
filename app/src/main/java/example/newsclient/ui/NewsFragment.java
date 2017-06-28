@@ -1,7 +1,11 @@
 package example.newsclient.ui;
 
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.ListView;
 
+import com.daimajia.slider.library.SliderLayout;
+import com.daimajia.slider.library.SliderTypes.TextSliderView;
 import com.google.gson.Gson;
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.exception.HttpException;
@@ -83,6 +87,40 @@ public class NewsFragment extends BaseFragment{
      *
      * @param mNewsEntity*/
     private void showDatas(List<NewsEntity.ResultBean> mNewsEntity) {
+        //首先显示轮播图
+        // 轮播图在第一条新闻
+        NewsEntity.ResultBean firstNews = mNewsEntity.get(0);
+        //先判断有无轮播图
+        if (firstNews.getAds()!=null&&firstNews.getAds().size()>0){
+            //有轮播图
+            //加载轮播图的布局文件
+            View headerView= LayoutInflater.from(getContext()).inflate(R.layout.head_list,mListView,false);
+
+            //查找轮播图控件
+            SliderLayout sliderLayout= (SliderLayout) headerView.findViewById(R.id.slider_layout);
+            //轮播图的数据源
+            List<NewsEntity.ResultBean.AdsBean> adsBeanList=firstNews.getAds();
+            //添加轮播图子界面
+            for (int i=0;i<adsBeanList.size();i++){
+                NewsEntity.ResultBean.AdsBean adsBean=adsBeanList.get(i);
+                //一个TextSliderView表示一个子界面
+                TextSliderView textSliderView=new TextSliderView(getContext());
+                //显示轮播图的标题
+                textSliderView.description(adsBean.getTitle())
+                        .image(adsBean.getImgsrc());
+
+                //添加一个子界面
+                sliderLayout.addSlider(textSliderView);
+            }
+
+            //把轮播图添加到listView的头部
+            mListView.addHeaderView(headerView);
+        }else {
+            //没有轮播图
+
+        }
+
+
     //创建Adapter
         mNewsAdapter=new NewsAdapter(getContext(),mNewsEntity);
         mListView.setAdapter(mNewsAdapter);
