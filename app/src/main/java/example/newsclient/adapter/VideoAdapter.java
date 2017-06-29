@@ -1,6 +1,7 @@
 package example.newsclient.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
@@ -15,6 +16,7 @@ import java.util.List;
 
 import example.newsclient.R;
 import example.newsclient.entity.VideoEntity;
+import example.newsclient.ui.VideoActivity;
 
 /**
  * 作者：国富小哥
@@ -45,7 +47,7 @@ public class VideoAdapter extends RecyclerView.Adapter{
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         videoHolder= (VideoHolder) holder;
-        VideoEntity.ResultBean resultBean=mResultBeanList.get(position);
+        final VideoEntity.ResultBean resultBean=mResultBeanList.get(position);
 
         //加载缩略图
         Picasso.with(mContext).load(resultBean.getCover()).into(videoHolder.ivVideoImage);
@@ -56,6 +58,17 @@ public class VideoAdapter extends RecyclerView.Adapter{
         videoHolder.tvVideoDuration.setText(durationStr);
         // 显示播放次数
         videoHolder.tvPlayCount.setText(resultBean.getPlayCount() + "");
+
+        //给item设置点击事件
+        videoHolder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mContext, VideoActivity.class);
+                intent.putExtra("video_url", resultBean.getMp4_url());
+                //跳转到视频播放页面
+                mContext.startActivity(intent);
+            }
+        });
     }
 
     @Override

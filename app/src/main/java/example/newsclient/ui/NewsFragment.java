@@ -1,7 +1,6 @@
 package example.newsclient.ui;
 
 import android.content.Intent;
-import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -19,6 +18,7 @@ import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import example.newsclient.R;
@@ -37,7 +37,7 @@ public class NewsFragment extends BaseFragment{
     private String channelId;
     private ListView mListView;
     private NewsAdapter mNewsAdapter;
-    private List<NewsEntity.ResultBean> listDatas;
+    private List<NewsEntity.ResultBean> listDatas=new ArrayList<>();
 
     //下拉刷新控件
     private SpringView mSpringView;
@@ -53,15 +53,23 @@ public class NewsFragment extends BaseFragment{
 
     @Override
     public void initData() {
-        getServerData();
+        getServerData(true);
     }
 
+    /** 要加载第几页数据 */
+    private int pageNo = 1;
     /**
      * 获取服务器数据
+     * @param refresh true表示下拉刷新，false表示加载下一页数据
      * */
-    private void getServerData() {
+    private void getServerData(final boolean refresh) {
+        if (refresh)
+            // 如果是下拉刷新
+            pageNo = 1;
+
+
         //通过channelId获取请求数据的URL
-       String url= UrlManager.getUrl(channelId);
+       String url= UrlManager.getUrl(channelId, pageNo);
         HttpUtils httpUtils=new HttpUtils();
         //发送请求
         httpUtils.send(HttpRequest.HttpMethod.GET, url, new RequestCallBack<String>() {
@@ -80,8 +88,18 @@ public class NewsFragment extends BaseFragment{
                 // 列表显示的数据集合
                listDatas = newsEntity.getResult();
 
-                // 显示数据到列表中
-                showDatas(listDatas);
+
+                if (refresh) {
+                    // 下拉刷新
+                    showDatas(listDatas);
+                } else {
+                    // 上拉加载下一页数据
+                    mNewsAdapter.appendDatas(listDatas);
+                }
+                pageNo++;       // 页码自增1
+
+                //  隐藏SpringView的下拉和上拉显示
+                mSpringView.onFinishFreshAndLoad();
             }
 
             @Override
@@ -129,11 +147,10 @@ public class NewsFragment extends BaseFragment{
             //没有轮播图
 
         }
+        // 重置列表的数据，刷新列表显示
+        mNewsAdapter.setDatas(listDatas);
 
 
-    //创建Adapter
-        mNewsAdapter=new NewsAdapter(getContext(),mNewsEntity);
-        mListView.setAdapter(mNewsAdapter);
     }
 
     @Override
@@ -156,6 +173,9 @@ public class NewsFragment extends BaseFragment{
     @Override
     public void initView() {
         mListView= (ListView) mView.findViewById(R.id.list_view);
+        //创建Adapter
+        mNewsAdapter=new NewsAdapter(getContext(),listDatas);
+        mListView.setAdapter(mNewsAdapter);
         initSpring();
     }
 
@@ -176,31 +196,14 @@ public class NewsFragment extends BaseFragment{
             // 下拉，刷新第一页数据
             @Override
             public void onRefresh() {
-
-
-                //延迟发消息
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        // 2秒后，隐藏springView控件上拉和下拉提示
-                        mSpringView.onFinishFreshAndLoad();
-                    }
-                }, 2000);
+                // 请求服务器第一页数据,然后刷新
+                getServerData(true);
             }
 
             // 上拉，刷新下一页页数据
             @Override
             public void onLoadmore() {
-
-
-                //延迟发消息
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        // 2秒后，隐藏springView控件上拉和下拉提示
-                        mSpringView.onFinishFreshAndLoad();
-                    }
-                }, 2000);
+                getServerData(false);
             }
         });
 

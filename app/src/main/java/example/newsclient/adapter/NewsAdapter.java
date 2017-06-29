@@ -153,7 +153,26 @@ public class NewsAdapter extends BaseAdapter{
         return 2;
     }
 
+
+
      /*------- 列表显示多种类型 -----------------*/
+
+
+
+    /**
+     * 重置列表的所有的数据，并刷新列表显示
+     * @param listDatas
+     */
+    public void setDatas(List<NewsEntity.ResultBean> listDatas) {
+        mResultBeanList = listDatas;
+        notifyDataSetChanged();     // 刷新列表
+    }
+
+    /** 追加数据，并刷新列表显示 */
+    public void appendDatas(List<NewsEntity.ResultBean> listDatas) {
+        mResultBeanList.addAll(listDatas);
+        notifyDataSetChanged();     // 刷新列表
+    }
 
     class ViewHolder{
 

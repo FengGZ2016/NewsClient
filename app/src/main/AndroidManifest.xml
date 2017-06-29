@@ -30,6 +30,7 @@
             >
         </activity>
         <activity android:name=".ui.ShowNewsActivity"/>
+        <activity android:name=".ui.VideoActivity"/>
     </application>
 
 </manifest>

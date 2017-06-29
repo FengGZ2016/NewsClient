@@ -74,6 +74,7 @@ public class GuideActivity extends BaseActivity {
             public void onClick(View v) {
                 Intent intent=new Intent(GuideActivity.this,MainActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
         startAnimation();

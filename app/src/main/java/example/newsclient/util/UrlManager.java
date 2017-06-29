@@ -26,12 +26,41 @@ public class UrlManager {
     public static String getUrl(String newsCategoryId) {
         // http://c.m.163.com/nc/article/headline/T1348647909107/0-20.html
 
-//,int pageNo,int pageSize
-       // int offset=(pageNo-1)*pageSize;
-        //@param pageNo 获取第几页数据
-     //* @param pageSize 一页数据有多少条
         return "http://c.m.163.com/nc/article/headline/" + newsCategoryId + "/0-20.html";
     }
+
+    /**
+     * 获取分页数据
+     * @param newsCategoryId 新闻类别id
+     * @param pageNo 获取第几页数据
+     * @param pageSize 每页数据有多少条
+     * */
+    public static String getUrl(String newsCategoryId,int pageNo,int pageSize){
+        // 第1页： 偏移量为 0,     1页10条,
+        // 第2页： 偏移量为 10,    1页10条,
+        // 第3页： 偏移量为 20,    1页10条,
+        int offset=(pageNo-1)*pageSize;
+        //偏移量减去每页数据的大小
+        return "http://c.m.163.com/nc/article/headline/" + newsCategoryId + "/"+offset+"-"+pageSize+".html";
+    }
+
+    /**
+     * 获取分页数据
+     *
+     * @param newsCategoryId 新闻类别id
+     * @param pageNo 获取第几页数据
+     * @return
+     */
+    public static String getUrl(String newsCategoryId, int pageNo) {
+        int pageSize = 10;
+        // 第1页： 偏移量为 0,     1页10条,
+        // 第2页： 偏移量为 10,    1页10条,
+        // 第3页： 偏移量为 20,    1页10条,
+        int offset = (pageNo -1) * pageSize;
+        return "http://c.m.163.com/nc/article/headline/"
+                + newsCategoryId + "/"+ offset +"-"+ pageSize +".html";
+    }
+
 
     // 视频url路径
     public static final String VideoURL = //
