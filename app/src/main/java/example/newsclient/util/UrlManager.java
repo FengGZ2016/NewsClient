@@ -20,10 +20,16 @@ public class UrlManager {
     /**
      * 获取一页新闻数据
      * @param newsCategoryId 新闻类别id
+     *
      * @return
      */
     public static String getUrl(String newsCategoryId) {
         // http://c.m.163.com/nc/article/headline/T1348647909107/0-20.html
+
+//,int pageNo,int pageSize
+       // int offset=(pageNo-1)*pageSize;
+        //@param pageNo 获取第几页数据
+     //* @param pageSize 一页数据有多少条
         return "http://c.m.163.com/nc/article/headline/" + newsCategoryId + "/0-20.html";
     }
 

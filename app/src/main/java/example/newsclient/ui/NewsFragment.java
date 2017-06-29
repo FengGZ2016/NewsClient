@@ -1,12 +1,18 @@
 package example.newsclient.ui;
 
+import android.content.Intent;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.daimajia.slider.library.SliderLayout;
 import com.daimajia.slider.library.SliderTypes.TextSliderView;
 import com.google.gson.Gson;
+import com.liaoinstan.springview.container.DefaultFooter;
+import com.liaoinstan.springview.container.MeituanHeader;
+import com.liaoinstan.springview.widget.SpringView;
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.ResponseInfo;
@@ -31,6 +37,10 @@ public class NewsFragment extends BaseFragment{
     private String channelId;
     private ListView mListView;
     private NewsAdapter mNewsAdapter;
+    private List<NewsEntity.ResultBean> listDatas;
+
+    //下拉刷新控件
+    private SpringView mSpringView;
 
 
     public String getChannelId() {
@@ -68,7 +78,7 @@ public class NewsFragment extends BaseFragment{
                 int count = newsEntity.getResult().size();
                 System.out.println("--------解析：" + count + " 条新闻");
                 // 列表显示的数据集合
-                List<NewsEntity.ResultBean> listDatas = newsEntity.getResult();
+               listDatas = newsEntity.getResult();
 
                 // 显示数据到列表中
                 showDatas(listDatas);
@@ -128,12 +138,72 @@ public class NewsFragment extends BaseFragment{
 
     @Override
     public void initListener() {
+        //给listView设置监听
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // 列表添加了头部后，第一条新闻数据的索引是从1开始，所以要减1
+                position--;
+                NewsEntity.ResultBean resultBean=listDatas.get(position);
 
+                Intent intent = new Intent(getActivity(), ShowNewsActivity.class);
+                intent.putExtra("news", resultBean);    // 新闻数据传到新闻详情界面
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
     public void initView() {
         mListView= (ListView) mView.findViewById(R.id.list_view);
+        initSpring();
+    }
+
+    /**
+     * 初始化下拉刷新控件
+     * */
+    private void initSpring() {
+        mSpringView= (SpringView) mView.findViewById(R.id.spring_view);
+        //设置头部
+        mSpringView.setHeader(new MeituanHeader(getContext()));
+        //设置尾部
+        mSpringView.setFooter(new DefaultFooter(getContext()));
+        //设置样式
+        mSpringView.setType(SpringView.Type.FOLLOW);
+
+        //设置监听器
+        mSpringView.setListener(new SpringView.OnFreshListener() {
+            // 下拉，刷新第一页数据
+            @Override
+            public void onRefresh() {
+
+
+                //延迟发消息
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        // 2秒后，隐藏springView控件上拉和下拉提示
+                        mSpringView.onFinishFreshAndLoad();
+                    }
+                }, 2000);
+            }
+
+            // 上拉，刷新下一页页数据
+            @Override
+            public void onLoadmore() {
+
+
+                //延迟发消息
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        // 2秒后，隐藏springView控件上拉和下拉提示
+                        mSpringView.onFinishFreshAndLoad();
+                    }
+                }, 2000);
+            }
+        });
+
     }
 
     @Override

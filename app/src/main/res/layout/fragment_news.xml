@@ -4,10 +4,17 @@
               android:gravity="center"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
-
-   <ListView
+   <com.liaoinstan.springview.widget.SpringView
+       android:id="@+id/spring_view"
        android:layout_width="match_parent"
-       android:layout_height="match_parent"
-       android:id="@+id/list_view"
-       ></ListView>
+       android:layout_height="wrap_content">
+      <ListView
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:id="@+id/list_view"
+          ></ListView>
+
+   </com.liaoinstan.springview.widget.SpringView>
+
+
 </LinearLayout>
